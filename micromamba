@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+dir="$(dirname "$(readlink -f "$0")")"
+args=()
+install=false
+while (( $# )); do
+  args=("${args[@]}" "$1")
+  if [[ "$1" == "install" || "$1" == "create" ]]; then
+    install=true
+    args=("${args[@]}" "-c" "conda-forge" "-c" "Bioconda" "--no-rc" "--no-env")
+  fi
+  if [[ "$install" == true && ( "$1" == "-c" || "$1" == "--channel" ) ]]; then
+    shift
+  fi
+  if [[ "$install" == true && ( "$1" == "-f" || "$1" == "--file" ) ]]; then
+    shift
+    "$dir"/filecheck.pl "$1" || { exit 1; }
+    args=("${args[@]}" "$1")
+  fi
+  shift
+done
+
+"$dir"/real "${args[@]}"
+
