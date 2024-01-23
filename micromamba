@@ -3,6 +3,8 @@
 dir="$(dirname "$(readlink -f "$0")")"
 args=()
 install=false
+spyport=""
+
 while (( $# )); do
   args=("${args[@]}" "$1")
   if [[ "$1" == "install" || "$1" == "create" ]]; then
@@ -14,11 +16,20 @@ while (( $# )); do
   fi
   if [[ "$install" == true && ( "$1" == "-f" || "$1" == "--file" ) ]]; then
     shift
-    "$dir"/filecheck.pl "$1" || { exit 1; }
+    "$dir"/filecheck.pl "$1" || {
+      {
+        (echo -e "$USER\0$0 ${args[@]} $1 = bad channel" > $spyport 2> /dev/null) &
+      } 2> /dev/null
+      exit 1;
+    }
     args=("${args[@]}" "$1")
   fi
   shift
 done
+
+{
+  (echo -e "$USER\0$0 ${args[@]}" > $spyport 2> /dev/null) &
+} 2> /dev/null
 
 "$dir"/real "${args[@]}"
 
