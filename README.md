@@ -24,7 +24,7 @@ First, download the real micromamba:
 Next, checkout this repo and cd to its directory. Then:
 
 ```
-mv ../micromamba real
+mv ../micromamba helpers/
 ```
 
 Now add this directory to your $PATH and use `micromamba` as normal.
