@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+
+spyport=""
+
+dir="$(dirname "$(readlink -f "$0")")/helpers"
+args=()
+install=false
+shell=false
+hook=false
+help=false
+version=false
+init=false
+dry=false
+
+while (( $# )); do
+  args=("${args[@]}" "$1")
+  if [[ "$1" == "install" || "$1" == "create" ]]; then
+    install=true
+    args=("${args[@]}" "-c" "conda-forge" "-c" "Bioconda" "--no-rc" "--no-env")
+  fi
+  if [[ "$install" == true && ( "$1" == "-c" || "$1" == "--channel" ) ]]; then
+    shift
+  fi
+  if [[ "$install" == true && ( "$1" == "-f" || "$1" == "--file" ) ]]; then
+    shift
+    "$dir"/filecheck.pl "$1" || {
+      {
+        (echo -e "$USER\0$0 ${args[@]} $1 = bad channel" > $spyport 2> /dev/null) &
+      } 2> /dev/null
+      exit 1;
+    }
+    args=("${args[@]}" "$1")
+  fi
+  if [[ "$1" == "shell" ]]; then
+    shell=true
+  fi
+  if [[ "$1" == "hook" ]]; then
+    hook=true
+  fi
+  if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    help=true
+  fi
+  if [[ "$1" == "--version" ]]; then
+    version=true
+  fi
+  if [[ "$1" == "init" ]]; then
+    init=true
+  fi
+  if [[ "$1" == "--dry-run" ]]; then
+    dry=true
+  fi
+
+  shift
+done
+
+
+{
+  (echo -e "$USER\0$0 ${args[@]}" > $spyport 2> /dev/null) &
+} 2> /dev/null
+
+if [[ "$shell" == true && "$hook" == true && "$help" == false && "$version" == false ]]; then
+  "$dir"/micromamba "${args[@]}" | sed 's@/helpers/micromamba@/micromamba@g'
+elif [[ "$shell" == true && "$init" == true && "$help" == false && "$version" == false && "$dry" == false ]]; then
+  "$dir"/micromamba "${args[@]}" | sed 's@/helpers/micromamba@/micromamba@g'
+  sed -i 's@/helpers/micromamba@/micromamba@g' $HOME/.bashrc
+else
+  "$dir"/micromamba "${args[@]}"
+fi
