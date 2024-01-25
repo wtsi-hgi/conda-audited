@@ -16,14 +16,18 @@ version=false
 init=false
 dry=false
 verbose=false
+activate=false
 
 while (( $# )); do
   args=("${args[@]}" "$1")
-  if [[ "$1" == "shell" || "$1" == "shell.bash" ]]; then
+  if [[ "$1" == "shell" || "$1" == "shell.bash" || "$1" == "shell.posix" ]]; then
     shell=true
   fi
   if [[ "$1" == "hook" ]]; then
     hook=true
+  fi
+  if [[ "$1" == "activate" ]]; then
+    activate=true
   fi
   if [[ "$1" == "-h" || "$1" == "--help" ]]; then
     help=true
@@ -44,7 +48,6 @@ while (( $# )); do
   shift
 done
 
-
 {
   (echo -e "$USER\0$this($faux) ${args[@]}" > $gsa 2> /dev/null) &
 } 2> /dev/null
@@ -58,6 +61,8 @@ if [[ "$shell" == true && "$hook" == true && "$help" == false && "$version" == f
 elif [[ "$shell" == true && "$init" == true && "$help" == false && "$version" == false && "$dry" == false ]]; then
   $real "${args[@]}" | sed 's@/ca-exes/micromamba@/micromamba@g'
   sed -i 's@/ca-exes/micromamba@/micromamba@g' $HOME/.bashrc
+elif [[ "$shell" == true && "$activate" == true && "$help" == false ]]; then
+  echo "export CONDA_GROUP="$(id -gn $USER) && $real "${args[@]}" | sed 's@/ca-exes/miniconda/bin/conda'\''@/conda'\''@g'
 elif [[ "$faux" == "conda" && "$init" == true && "$help" == false ]]; then
   if [[ "$verbose" == true ]]; then
     $real "${args[@]}" | sed 's@/ca-exes/miniconda/bin/conda@/conda@g'
