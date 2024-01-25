@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
+faux=$(basename -- "$0")
 this=$(readlink -f "$0")
 thisdir="$(dirname "$this")"
 gsa=$(<"$thisdir/gsa")
 
 dir="$(dirname "$thisdir")"
-micromamba="$dir"/ca-exes/micromamba
-conda="$dir"/ca-exes/conda
+real="$dir"/ca-exes/$faux
 
 args=()
 shell=false
@@ -15,10 +15,11 @@ help=false
 version=false
 init=false
 dry=false
+verbose=false
 
 while (( $# )); do
   args=("${args[@]}" "$1")
-  if [[ "$1" == "shell" ]]; then
+  if [[ "$1" == "shell" || "$1" == "shell.bash" ]]; then
     shell=true
   fi
   if [[ "$1" == "hook" ]]; then
@@ -33,8 +34,11 @@ while (( $# )); do
   if [[ "$1" == "init" ]]; then
     init=true
   fi
-  if [[ "$1" == "--dry-run" ]]; then
+  if [[ "$1" == "-d" || "$1" == "--dry-run" ]]; then
     dry=true
+  fi
+  if [[ "$1" == "-v" || "$1" == "--verbose" ]]; then
+    verbose=true
   fi
 
   shift
@@ -42,14 +46,28 @@ done
 
 
 {
-  (echo -e "$USER\0$this ${args[@]}" > $gsa 2> /dev/null) &
+  (echo -e "$USER\0$this($faux) ${args[@]}" > $gsa 2> /dev/null) &
 } 2> /dev/null
 
 if [[ "$shell" == true && "$hook" == true && "$help" == false && "$version" == false ]]; then
-  $micromamba "${args[@]}" | sed 's@/ca-exes/micromamba@/micromamba@g'
+  if [[ "$faux" == "conda" ]]; then
+    echo "export CONDA_GROUP="$(id -gn $USER) && $real "${args[@]}" | sed 's@/ca-exes/miniconda/bin/conda@/conda@g'
+  else
+    $real "${args[@]}" | sed 's@/ca-exes/micromamba@/micromamba@g'
+  fi
 elif [[ "$shell" == true && "$init" == true && "$help" == false && "$version" == false && "$dry" == false ]]; then
-  $micromamba "${args[@]}" | sed 's@/ca-exes/micromamba@/micromamba@g'
+  $real "${args[@]}" | sed 's@/ca-exes/micromamba@/micromamba@g'
   sed -i 's@/ca-exes/micromamba@/micromamba@g' $HOME/.bashrc
+elif [[ "$faux" == "conda" && "$init" == true && "$help" == false ]]; then
+  if [[ "$verbose" == true ]]; then
+    $real "${args[@]}" | sed 's@/ca-exes/miniconda/bin/conda@/conda@g'
+  fi
+  if [[ "$dry" == false ]]; then
+    if [[ "$verbose" == false ]]; then
+      $real "${args[@]}"
+    fi
+    sed -i 's@ca-exes/miniconda/bin\(/\)\{0,1\}@@g' $HOME/.bashrc
+  fi
 else
-  $micromamba "${args[@]}"
+  $real "${args[@]}"
 fi
