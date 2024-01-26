@@ -25,3 +25,8 @@ echo "/dev/tcp/[machine]/[port]" > ca-scripts/gsa
 
 Finally, add the repo directory to your $PATH, call
 `export CONDA_GROUP=$(id -gn $USER)` and use `conda` as normal.
+
+## Module
+An example module file is included in this repo. You'll need to change the
+help text and path, but otherwise can install it in your modules location to
+make it easier for people to use this wrapper.
