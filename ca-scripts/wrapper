@@ -48,20 +48,16 @@ done
   (echo -e "$USER\0$this($faux) ${args[@]}" > $gsa 2> /dev/null) &
 } 2> /dev/null
 
-if [[ "$shell" == true && "$hook" == true && "$help" == false ]]; then
-  echo "export CONDA_GROUP="$(id -gn $USER) && $real "${args[@]}" | sed 's@/ca-exes/miniconda/bin/conda@/conda@g'
-elif [[ "$shell" == true && "$activate" == true && "$help" == false ]]; then
-  echo "export CONDA_GROUP="$(id -gn $USER) && $real "${args[@]}" | sed 's@/ca-exes/miniconda/bin/conda'\''@/conda'\''@g' | sed 's@export PATH='\'$rdir'/ca-exes/miniconda/bin:@export PATH='\'$rdir':'$rdir'/ca-exes/miniconda/bin:@g'
-elif [[ "$init" == true && "$help" == false ]]; then
-  if [[ "$verbose" == true ]]; then
-    $real "${args[@]}" | sed 's@/ca-exes/miniconda/bin/conda@/conda@g'
-  fi
-  if [[ "$dry" == false ]]; then
-    if [[ "$verbose" == false ]]; then
-      $real "${args[@]}"
-    fi
-    sed -i 's@ca-exes/miniconda/bin\(/\)\{0,1\}@@g' $HOME/.bashrc
-  fi
-else
+if [[ "$shell" == true && "$help" == false && ("$hook" == true || "$activate" == true) ]]; then
+  echo "export CONDA_GROUP="$(id -gn $USER)
+fi
+
+if [[ "$shell" == true && "$activate" == true && "$help" == false ]]; then
+  $real "${args[@]}" | sed 's@/ca-exes/miniconda/bin/conda'\''@/conda'\''@g' | sed 's@export PATH='\'$rdir'/ca-exes/miniconda/bin:@export PATH='\'$rdir':'$rdir'/ca-exes/miniconda/bin:@g'
+elif
   $real "${args[@]}" | sed 's@/ca-exes/miniconda/bin/conda@/conda@g'
+fi
+
+if [[ "$init" == true && "$help" == false && "$dry" == false ]]; then
+  sed -i 's@ca-exes/miniconda/bin\(/\)\{0,1\}@@g' $HOME/.bashrc
 fi
