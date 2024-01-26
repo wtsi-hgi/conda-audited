@@ -5,8 +5,8 @@ this=$(readlink -f "$0")
 thisdir="$(dirname "$this")"
 gsa=$(<"$thisdir/gsa")
 
-dir="$(dirname "$thisdir")"
-real="$dir"/ca-exes/$faux
+rdir="$(dirname "$thisdir")"
+real="$rdir"/ca-exes/$faux
 
 args=()
 shell=false
@@ -51,7 +51,7 @@ done
 if [[ "$shell" == true && "$hook" == true && "$help" == false ]]; then
   echo "export CONDA_GROUP="$(id -gn $USER) && $real "${args[@]}" | sed 's@/ca-exes/miniconda/bin/conda@/conda@g'
 elif [[ "$shell" == true && "$activate" == true && "$help" == false ]]; then
-  echo "export CONDA_GROUP="$(id -gn $USER) && $real "${args[@]}" | sed 's@/ca-exes/miniconda/bin/conda'\''@/conda'\''@g' | sed 's@export PATH='\''$dir/miniconda/bin:@export PATH='\'"$dir:$dir/miniconda/bin:@g"
+  echo "export CONDA_GROUP="$(id -gn $USER) && $real "${args[@]}" | sed 's@/ca-exes/miniconda/bin/conda'\''@/conda'\''@g' | sed 's@export PATH='\'$rdir'/ca-exes/miniconda/bin:@export PATH='\'$rdir':'$rdir'/ca-exes/miniconda/bin:@g'
 elif [[ "$init" == true && "$help" == false ]]; then
   if [[ "$verbose" == true ]]; then
     $real "${args[@]}" | sed 's@/ca-exes/miniconda/bin/conda@/conda@g'
