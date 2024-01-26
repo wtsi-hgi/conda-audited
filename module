@@ -6,8 +6,8 @@ proc ModulesHelp { } {
    puts stderr ""
    puts stderr "This module provides an installation of miniconda that you can"
    puts stderr "use that has been pre-configured with some common channels and"
-   puts stderr "installation directories in /software. It also audits your conda
-   puts stderr "usage so that HGI can understand software usage to better help
+   puts stderr "installation directories in /software. It also audits your conda"
+   puts stderr "usage so that HGI can understand software usage to better help"
    puts stderr "you in the future."
    puts stderr ""
    puts stderr "Basic usage starts with loading this module once, then doing an"
@@ -19,10 +19,13 @@ proc ModulesHelp { } {
    puts stderr "will actually have worked.)"
    puts stderr ""
    puts stderr "Now close your terminal and make a new one. You'll now be in the"
-   puts stderr "base environment and can use conda as normal. By default your"
-   puts stderr "newley created environments will end up in"
-   puts stderr "/software/hgi/[yourgroup]/[yourusername], so they won't us up"
-   puts stderr "your quota and loading your software won't be slow."
+   puts stderr "base environment and can use conda as normal."
+   puts stderr "(Note that this is miniconda's default base environment, which"
+   puts stderr "has a minimum of things already installed in it.)"
+   puts stderr ""
+   puts stderr "By default your newley created environments will end up in"
+   puts stderr "/software/hgi/\[yourgroup\]/\[yourusername\], so they won't use"
+   puts stderr "up your quota and loading your software won't be slow."
    puts stderr ""
    puts stderr "Typical conda-like operations look like:"
    puts stderr "\$ conda create --name \[yourenv\] biopython"
@@ -46,5 +49,7 @@ proc ModulesHelp { } {
 
 module-whatis "miniconda wrapper with auditing and /software config"
 
-setenv CONDA_GROUP $(id -gn $USER)
+set group [exec id -gn $env(USER)]
+
+setenv CONDA_GROUP $group
 prepend-path PATH /software/hgi/installs/conda-audited
