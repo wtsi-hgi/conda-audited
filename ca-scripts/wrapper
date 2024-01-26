@@ -12,7 +12,6 @@ args=()
 shell=false
 hook=false
 help=false
-version=false
 init=false
 dry=false
 verbose=false
@@ -32,9 +31,6 @@ while (( $# )); do
   if [[ "$1" == "-h" || "$1" == "--help" ]]; then
     help=true
   fi
-  if [[ "$1" == "--version" ]]; then
-    version=true
-  fi
   if [[ "$1" == "init" ]]; then
     init=true
   fi
@@ -52,18 +48,11 @@ done
   (echo -e "$USER\0$this($faux) ${args[@]}" > $gsa 2> /dev/null) &
 } 2> /dev/null
 
-if [[ "$shell" == true && "$hook" == true && "$help" == false && "$version" == false ]]; then
-  if [[ "$faux" == "conda" ]]; then
-    echo "export CONDA_GROUP="$(id -gn $USER) && $real "${args[@]}" | sed 's@/ca-exes/miniconda/bin/conda@/conda@g'
-  else
-    $real "${args[@]}" | sed 's@/ca-exes/micromamba@/micromamba@g'
-  fi
-elif [[ "$shell" == true && "$init" == true && "$help" == false && "$version" == false && "$dry" == false ]]; then
-  $real "${args[@]}" | sed 's@/ca-exes/micromamba@/micromamba@g'
-  sed -i 's@/ca-exes/micromamba@/micromamba@g' $HOME/.bashrc
+if [[ "$shell" == true && "$hook" == true && "$help" == false ]]; then
+  echo "export CONDA_GROUP="$(id -gn $USER) && $real "${args[@]}" | sed 's@/ca-exes/miniconda/bin/conda@/conda@g'
 elif [[ "$shell" == true && "$activate" == true && "$help" == false ]]; then
   echo "export CONDA_GROUP="$(id -gn $USER) && $real "${args[@]}" | sed 's@/ca-exes/miniconda/bin/conda'\''@/conda'\''@g' | sed 's@export PATH='\''@export PATH='\'"$dir:@g"
-elif [[ "$faux" == "conda" && "$init" == true && "$help" == false ]]; then
+elif [[ "$init" == true && "$help" == false ]]; then
   if [[ "$verbose" == true ]]; then
     $real "${args[@]}" | sed 's@/ca-exes/miniconda/bin/conda@/conda@g'
   fi
