@@ -1,0 +1,39 @@
+#%Module
+
+proc ModulesHelp { } {
+   puts stderr "Usage: use micromamba as normal, but without specifying channels."
+   puts stderr "Channels are restricted to conda-forge and Bioconda."
+   puts stderr ""
+   puts stderr "Basic usage starts with either initialising every time you log in"
+   puts stderr "by running this one time:"
+   puts stderr "\$ micromamba shell init \[optional path to root prefix\]"
+   puts stderr ""
+   puts stderr "The root prefix defaults to \$HOME/micromamba; you could set it"
+   puts stderr "to a /software location instead. After this, you no longer need"
+   puts stderr "to load this module each time you login."
+   puts stderr ""
+   puts stderr "Alternatively, you can load this module and run the following"
+   puts stderr "every time you wish to use micromamba:"
+   puts stderr "\$ eval \"\$(micromamba shell hook)\""
+   puts stderr ""
+   puts stderr "Then your typical conda-like operations look like (note the need"
+   puts stderr "to specify a python):"
+   puts stderr "\$ micromamba create -n \[a name\] biopython python=3.12.1"
+   puts stderr "\$ micromamba activate \[a name\]"
+   puts stderr "\$ micromamba env list"
+   puts stderr ""
+   puts stderr "To install a farm5 conda environment on farm22:"
+   puts stderr "farm5 \$ conda activate \[yourenv\]"
+   puts stderr "farm5 \$ conda list --explicit --md5 > explicit_env.txt"
+   puts stderr "farm22 \$ micromamba create -n \[yourenv\] -f explicit_env.txt"
+   puts stderr ""
+   puts stderr "It will exit with an error if your conda environment was built"
+   puts stderr "with a licensed channel; you MUST NOT try to bypass this. Stop"
+   puts stderr "what you're doing and contact HGI."
+}
+
+module-whatis "micromamba wrapper with channel restrictions and auditing"
+
+setenv MAMBA_EXE /software/hgi/installs/micromamba/micromamba
+setenv MAMBA_ROOT_PREFIX $env(HOME)/micromamba
+prepend-path PATH /software/hgi/installs/micromamba
