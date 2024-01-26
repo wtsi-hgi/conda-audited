@@ -63,7 +63,5 @@ elif [[ "$init" == true && "$help" == false ]]; then
     sed -i 's@ca-exes/miniconda/bin\(/\)\{0,1\}@@g' $HOME/.bashrc
   fi
 else
-  $real "${args[@]}"
+  $real "${args[@]}" | sed 's@/ca-exes/miniconda/bin/conda@/conda@g'
 fi
-
-export CONDA_EXE="$rdir/conda"
