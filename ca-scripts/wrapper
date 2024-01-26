@@ -62,7 +62,7 @@ elif [[ "$shell" == true && "$init" == true && "$help" == false && "$version" ==
   $real "${args[@]}" | sed 's@/ca-exes/micromamba@/micromamba@g'
   sed -i 's@/ca-exes/micromamba@/micromamba@g' $HOME/.bashrc
 elif [[ "$shell" == true && "$activate" == true && "$help" == false ]]; then
-  echo "export CONDA_GROUP="$(id -gn $USER) && $real "${args[@]}" | sed 's@/ca-exes/miniconda/bin/conda'\''@/conda'\''@g'
+  echo "export CONDA_GROUP="$(id -gn $USER) && $real "${args[@]}" | sed 's@/ca-exes/miniconda/bin/conda'\''@/conda'\''@g' | sed 's@export PATH='\''@export PATH='\'"$dir:@g"
 elif [[ "$faux" == "conda" && "$init" == true && "$help" == false ]]; then
   if [[ "$verbose" == true ]]; then
     $real "${args[@]}" | sed 's@/ca-exes/miniconda/bin/conda@/conda@g'
