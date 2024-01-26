@@ -54,7 +54,7 @@ fi
 
 if [[ "$shell" == true && "$activate" == true && "$help" == false ]]; then
   $real "${args[@]}" | sed 's@/ca-exes/miniconda/bin/conda'\''@/conda'\''@g' | sed 's@export PATH='\'$rdir'/ca-exes/miniconda/bin:@export PATH='\'$rdir':'$rdir'/ca-exes/miniconda/bin:@g'
-elif
+else
   $real "${args[@]}" | sed 's@/ca-exes/miniconda/bin/conda@/conda@g'
 fi
 
