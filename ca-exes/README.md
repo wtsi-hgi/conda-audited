@@ -12,6 +12,7 @@ channels:
 - nodefaults
 - bioconda
 auto_update_conda: false #!final
+notify_outdated_conda: false #!final
 envs_dirs: [/location/for/end-user/envs/\$CONDA_GROUP/\$USER] #!final
 pkgs_dirs: [/location/for/end-user/envs/\$CONDA_GROUP/\$USER/pkgs, $PWD/miniconda/pkgs] #!final
 EOT
