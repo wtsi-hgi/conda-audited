@@ -15,9 +15,6 @@ proc ModulesHelp { } {
    puts stderr "\$ module load HGI/common/conda"
    puts stderr "\$ conda init"
    puts stderr ""
-   puts stderr "(If this errors with an attempt to sudo, just hit ctrl-c; it"
-   puts stderr "will actually have worked.)"
-   puts stderr ""
    puts stderr "Now close your terminal and make a new one. You'll now be in the"
    puts stderr "base environment and can use conda as normal."
    puts stderr "(Note that this is miniconda's default base environment, which"
@@ -52,4 +49,4 @@ module-whatis "miniconda wrapper with auditing and /software config"
 set group [exec id -gn $env(USER)]
 
 setenv CONDA_GROUP $group
-prepend-path PATH /software/hgi/installs/conda-audited
+prepend-path PATH /software/hgi/installs/conda-audited/miniconda/bin
