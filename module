@@ -4,7 +4,7 @@ proc ModulesHelp { } {
    puts stderr "Usage: load this module once, run `conda init`, then use conda"
    puts stderr "as normal."
    puts stderr ""
-   puts stderr "This module provides an installation of miniconda that you can"
+   puts stderr "This module provides an installation of miniforge that you can"
    puts stderr "use that has been pre-configured with some common channels and"
    puts stderr "installation directories in /software. It also audits your conda"
    puts stderr "usage so that HGI can understand software usage to better help"
@@ -17,7 +17,7 @@ proc ModulesHelp { } {
    puts stderr ""
    puts stderr "Now close your terminal and make a new one. You'll now be in the"
    puts stderr "base environment and can use conda as normal."
-   puts stderr "(Note that this is miniconda's default base environment, which"
+   puts stderr "(Note that this is miniforge's default base environment, which"
    puts stderr "has a minimum of things already installed in it.)"
    puts stderr ""
    puts stderr "By default your newley created environments will end up in"
@@ -44,9 +44,9 @@ proc ModulesHelp { } {
    puts stderr "every time you switch to a different farm."
 }
 
-module-whatis "miniconda wrapper with auditing and /software config"
+module-whatis "miniforge wrapper with auditing and /software config"
 
 set group [exec id -gn $env(USER)]
 
 setenv CONDA_GROUP $group
-prepend-path PATH /software/hgi/installs/conda-audited/miniconda/bin
+prepend-path PATH /software/hgi/installs/conda-audited/miniforge/bin
