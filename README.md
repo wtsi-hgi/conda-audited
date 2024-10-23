@@ -63,4 +63,4 @@ Now you can use `conda` as normal.
 ## Module
 An example module file is included in this repo. You'll need to change the
 help text and path, but otherwise can install it in your modules location to
-make it easier for people to use this install of miniconda.
+make it easier for people to use this install of miniforge.
