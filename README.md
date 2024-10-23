@@ -20,12 +20,14 @@ like this (changing the /location/for/end-user/envs):
 wget -O miniforge.sh "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname)-$(uname -m).sh"
 bash ./miniforge.sh -b -p $PWD/miniforge
 rm miniforge.sh
+$PWD/miniforge/bin/conda update --all
 
 cat <<EOT > miniforge/.condarc
 channels:
 - conda-forge
 - nodefaults
 - bioconda
+denylist_channels: [defaults, anaconda, r, main, pro] #!final
 auto_update_conda: false #!final
 notify_outdated_conda: false #!final
 env_prompt: '({name}) '

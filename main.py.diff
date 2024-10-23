@@ -1,8 +1,9 @@
-3a4,6
+4a5,7
 > import getpass
 > import os
 > import socket
-114a118,132
+94a98,112
+>
 >     try:
 >         cmd = ' '.join(sys.argv)
 >         script_dir = os.path.dirname(sys.argv[0])
@@ -17,4 +18,3 @@
 >         s.close()
 >     except socket.error:
 >         pass
-> 
