@@ -27,7 +27,8 @@ channels:
 - conda-forge
 - nodefaults
 - bioconda
-denylist_channels: [defaults, anaconda, r, main, pro] #!final
+denylist_channels: [defaults, anaconda, r, main, pro, free] #!final
+channel_priority: 'strict' #!final
 auto_update_conda: false #!final
 notify_outdated_conda: false #!final
 env_prompt: '({name}) '
